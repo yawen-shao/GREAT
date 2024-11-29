@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description"
+    content="Geometry-Intention Collaborative Inference for Open-Vocabulary 3D Object Affordance Grounding">
+    <meta name="keywords" content="Geometry-Intention, Open-Vocabulary 3D Object Affordance Grounding">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GREAT: Geometry-Intention Collaborative Inference for Open-Vocabulary 3D Object Affordance Grounding</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+
+    <style>
+        .overline {
+            text-decoration: overline;
+        }
+        h2 {
+            text-align: center;
+        }
+        p {
+            text-align: justify;
+        }
+        .render_wrapper_small {
+			      position: relative;
+            height: 200px;
+         }
+         .render_wrapper {
+            position: relative;
+            max-height: 400px;
+            height: auto;
+            width: auto;
+        }
+        .render_wrapper_relative {
+            position: relative;
+            max-height: 300px;
+            max-width: 300px;
+            height: auto;
+            width: auto;
+        }
+        .render_wrapper_relative>img {
+          width: 300px;
+          height: 300px;
+        }
+        .render_div {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #interpolation-image-wrapper-car{
+            text-align: center;
+        }
+        #interpolation-image-wrapper-chair{
+            text-align: center;
+        }
+        .nested-columns {
+            margin-bottom: 0 !important;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div class="navbar-menu">
+          <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+            <a class="navbar-item" href="">
+            <span class="icon">
+                <i class="fas fa-home"></i>
+            </span>
+            </a>
+      
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">
+                More Research
+              </a>
+              <div class="navbar-dropdown">
+                <a class="navbar-item" href="https://yyvhang.github.io/EgoChoir/"> 
+                  EgoChoir
+                <a class="navbar-item" href="https://yyvhang.github.io/LEMON/"> 
+                  LEMON
+                <a class="navbar-item" href="https://yyvhang.github.io/publications/IAG/index.html">
+                  IAG-Net
+                </a>
+                <a class="navbar-item" href="https://github.com/lhc1224/OSAD_Net"> 
+                  OSAD-Net
+                </a>
+                <a class="navbar-item" href="https://github.com/lhc1224/Cross-View-AG"> 
+                  Cross-View-AG
+                </a>
+                <a class="navbar-item" href="https://openaccess.thecvf.com/content/CVPR2023/papers/Luo_Leverage_Interactive_Affinity_for_Affordance_Learning_CVPR_2023_paper.pdf"> 
+                  PIAL
+                </a>
+              </div>
+            </div>
+          </div>
+      
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-body">
+          <div class="container is-max-desktop">
+            <div class="columns is-centered">
+              <div class="column has-text-centered">
+                <h1 class="title is-1 publication-title">GREAT: Geometry-Intention Collaborative Inference for Open-Vocabulary 3D Object Affordance Grounding</h1>
+                <div class="is-size-5 publication-authors">
+                  <span class="author-block">
+                    <a href="https://github.com/yawen-shao">Yawen Shao</a><sup>1</sup>,</span>
+                  <span class="author-block">
+                    <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=UI5_qZcAAAAJ">Wei Zhai</a><sup>1</sup>,</span>  
+                  <span class="author-block">
+                    <a href="https://yyvhang.github.io">Yuhang Yang</a><sup>1</sup>,</span>
+                  <span class="author-block">
+                    <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=FnQQTeoAAAAJ">Hongchen Luo</a><sup>2</sup>,
+                  </span>
+                  <span class="author-block">
+                    <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=K7rTHNcAAAAJ">Yang Cao</a><sup>1,3</sup>,
+                  </span>
+                  <span class="author-block">
+                    <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=gDnBC1gAAAAJ">Zheng-Jun Zha</a><sup>1</sup>
+                  </span>
+                </div>
+      
+                <div class="is-size-5 publication-authors">
+                  <span class="author-block"><sup>1</sup>University of Science and Technology of China</span>
+                  <span class="author-block"><sup>2</sup>Northeastern University</span>
+                  <span class="author-block"><sup>3</sup>Institute of Artificial Intelligence, Hefei Comprehensive National Science Center</span>
+                </div>
+      
+                <div class="column has-text-centered">
+                  <div class="publication-links">
+                    <!-- PDF Link. -->
+                    <span class="link-block">
+                      <a href="https://arxiv.org/abs/2312.08963"
+                         class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                            <i class="ai ai-arxiv"></i>
+                        </span>
+                        <span>arXiv</span>
+                      </a>
+                    </span>
+                    <!-- Video Link. -->
+                    <!-- <span class="link-block">
+                      <a href=""
+                         class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                            <i class="fab fa-youtube"></i>
+                        </span>
+                        <span>Video</span>
+                      </a>
+                    </span> -->
+                    <!-- Code Link. -->
+                    <span class="link-block">
+                      <a href="https://github.com/yawen-shao/GREAT_code"
+                         class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                            <i class="fab fa-github"></i>
+                        </span>
+                        <span>Code</span>
+                        </a>
+                    </span>
+                    <!-- Dataset Link. -->
+                    <span class="link-block">
+                      <a href=""
+                         class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                            <i class="far fa-images"></i>
+                        </span>
+                        <span>Data</span>
+                        </a>
+                  </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+          <!-- Abstract. -->
+          <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+              <h2 class="title is-3">Abstract</h2>
+              <div class="content has-text-justified">
+                <p>
+                  Open-Vocabulary 3D object affordance grounding aims to anticipate ``action possibilities'' regions on 3D objects with arbitrary instructions, 
+                  which is crucial for robots to generically perceive real scenarios and respond to operational changes. Existing methods focus on combining 
+                  images or languages that depict interactions with 3D geometries to introduce external interaction priors. However, they are still vulnerable 
+                  to a limited semantic space by failing to leverage implied invariant geometries and potential interaction intentions. Normally, humans address 
+                  complex tasks through multi-step reasoning and respond to diverse situations by leveraging associative and analogical thinking. In light of this, 
+                  we propose <b>GREAT</b> (<b>G</b>eomet<b>R</b>y-int<b>E</b>ntion coll<b>A</b>bora<b>T</b>ive inference) for Open-Vocabulary 3D Object Affordance 
+                  Grounding, a novel framework that mines the object invariant geometry attributes and performs analogically reason in potential interaction scenarios 
+                  to form affordance knowledge, fully combining the knowledge with both geometries and visual contents to ground 3D object affordance. Besides, we 
+                  introduce the <b>P</b>oint <b>I</b>mage <b>A</b>ffordance <b>D</b>ataset <b>v2</b> (<b>PIADv2</b>), the largest 3D object affordance dataset at 
+                  present to support the task. Extensive experiments demonstrate the effectiveness and superiority of GREAT. 
+                </p>
+              </div>
+            </div>
+          </div>
+          <!--/ Abstract. -->
+      
+          <!-- Paper video. -->
+          <!-- <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+              <h2 class="title is-3">Video</h2>
+              <div class="publication-video">
+                <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div> -->
+          <!--/ Paper video. -->
+        </div>
+      </section>
+
+    <br><br>
+    <h2 class="title is-3">Seen Partition</h2>
+    <section class="hero is-light is-small">
+        <div class="hero-body">
+            <div class="container">
+                <div id="results-carousel" class="carousel results-carousel">
+                    <div class="item item-bag">
+                        <video poster="" id="bag" autoplay controls muted loop playsinline height="100%">
+                            <source src="./static/videos/bag_lift_seen.mp4"
+                                    type="video/mp4">
+                        </video>
+                        <img src="./static/images/bag_lift_seen.jpg" height="20%" />
+                    </div>
+                    <div class="item item-bicycle">
+                      <img src="./static/images/bicycle_ride_seen.jpg" height="20%" />
+                      <video poster="" id="bicycle" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/bicycle_ride_seen.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-chair">
+                      <video poster="" id="chair" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/chair_sit_seen.mp4"
+                                  type="video/mp4">
+                      </video>
+                      <img src="./static/images/chair_sit_seen.jpg" height="20%" />
+                    </div>
+                    <div class="item item-mug">
+                      <img src="./static/images/mug_grasp_seen.jpg" height="20%" />
+                      <video poster="" id="mug" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/mug_grasp_seen.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-glasses">
+                      <video poster="" id="glasses" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/glasses_wear_seen.mp4"
+                                  type="video/mp4">
+                      </video>
+                      <img src="./static/images/glasses_wear_seen.jpg" height="20%" />
+                    </div>
+                    <div class="item item-dishwasher">
+                      <img src="./static/images/dishwasher_open_seen.jpg" height="20%" />
+                      <video poster="" id="dishwasher" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/dishwasher_open_seen.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-display">
+                        <video poster="" id="display" autoplay controls muted loop playsinline height="100%">
+                            <source src="./static/videos/display_display_seen.mp4"
+                                    type="video/mp4">
+                        </video>
+                        <img src="./static/images/display_display_seen.jpg" height="20%" />
+                    </div>
+                </div>
+                <div style="text-align: center;">The training and test sets share the same objects and affordances.</div>
+            </div>
+        </div>
+    </section>
+
+    <br><br>
+    <h2 class="title is-3">Unseen Object Partition</h2>
+    <section class="hero is-light is-small">
+        <div class="hero-body">
+            <div class="container">
+                <div id="results-carousel" class="carousel results-carousel">
+                    <div class="item item-bucket">
+                        <video poster="" id="bucket" autoplay controls muted loop playsinline height="100%">
+                            <source src="./static/videos/bucket_lift_unseenobj.mp4"
+                                    type="video/mp4">
+                        </video>
+                        <img src="./static/images/bucket_lift_unseenobj.jpg" height="20%" />
+                    </div>
+                    <div class="item item-clock">
+                      <img src="./static/images/clock_diplay_unseenobj.jpg" height="20%" />
+                      <video poster="" id="clock" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/clock_diplay_unseenobj.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-motorcycle">
+                      <video poster="" id="motorcycle" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/motorcycle_ride_unseenobj.mp4"
+                                  type="video/mp4">
+                      </video>
+                      <img src="./static/images/motorcycle_ride_unseenobj.jpg" height="20%" />
+                    </div>
+                    <div class="item item-refrigerator">
+                      <img src="./static/images/refrigerator_contain_unseenobj.jpg" height="20%" />
+                      <video poster="" id="refrigerator" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/refrigerator_contain_unseenobj.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                </div>
+                <div style="text-align: center;">Affordances are consistent between the training and test sets, but some objects in the test set do not appear in the training set. </div>
+            </div>
+        </div>
+    </section>
+
+    <br><br>
+    <h2 class="title is-3">Unseen Affordance Partition</h2>
+    <section class="hero is-light is-small">
+        <div class="hero-body">
+            <div class="container">
+                <div id="results-carousel" class="carousel results-carousel">
+                    <div class="item item-bed">
+                        <video poster="" id="bed" autoplay controls muted loop playsinline height="100%">
+                            <source src="./static/videos/bed_lay_unseenaff.mp4"
+                                    type="video/mp4">
+                        </video>
+                        <img src="./static/images/bed_lay_unseenaff.jpg" height="20%" />
+                    </div>
+                    <div class="item item-scissors">
+                      <img src="./static/images/scissors_cut_unseenaff.jpg" height="20%" />
+                      <video poster="" id="scissors" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/scissors_cut_unseenaff.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-kettle">
+                      <video poster="" id="kettle" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/kettle_pour_unseenaff.mp4"
+                                  type="video/mp4">
+                      </video>
+                      <img src="./static/images/kettle_pour_unseenaff.jpg" height="20%" />
+                    </div>
+                    <div class="item item-backpack">
+                      <img src="./static/images/backpack_carry_unseenaff.jpg" height="20%" />
+                      <video poster="" id="backpack" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/backpack_carry_unseenaff.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-suitcase">
+                        <video poster="" id="suitcase" autoplay controls muted loop playsinline height="100%">
+                            <source src="./static/videos/suitcase_pull_unseenaff.mp4"
+                                    type="video/mp4">
+                        </video>
+                        <img src="./static/images/suitcase_pull_unseenaff.jpg" height="20%" />
+                    </div>
+                </div>
+                <div style="text-align: center;">Affordances in the test set are not present in the training set, and so does certain objects: "backpack", "suitcase". </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="container is-max-desktop">
+                <div class="hero-body">
+                    <h2 class="title is-3">Difference and Motivation</h2>
+                    <img src="./static/images/difference.png" height="150%" />
+                      <p>
+                        <b>Difference and Motivation.</b> (a) object affordance grounding on seen setting. (b) Open-Vocabulary Affordance Grounding (OVAG) with previous paradigms. (c) when observing interaction images, 
+                        people engage in brainstorming through memory representations, drawing on prior interaction experiences to perform analogical reasoning and infer appropriate actions. 
+                        (d) OVAG with our geometry-intention collaborative inference with chain-of-thought, step-by-step identifies the interaction part, extracts geometric attributes, 
+                        reasons about corresponding interaction and brainstorms underlying interaction intentions, jointly grounding the 3D object affordance.
+                      </p>
+                </div>
+            </div>
+
+            <div class="container is-max-desktop" >
+              <div class="container is-max-desktop">
+                  <div class="hero-body">
+                      <h2 class="title is-3">Method Overview</h2>
+                      <img src="./static/images/method.png" height="150%" />
+                        <p>
+                          <b>GREAT Pipeline.</b> Initially, it extracts the respective features F<sub>i</sub>, F<sub>p</sub> through modality-specific backbones, then results of MHACoT inference
+                          are encoded and aggregated to form object/affordance knowledge features <span class="overline">T</span><sub>o</sub>, <span class="overline">T</span><sub>a</sub>.
+                          Next, GREAT utilizes CMAFM to inject knowledge into F<sub>p</sub> and F<sub>i</sub> is directly fused to obtain fusion features F<sub>tp</sub>, F<sub>ti</sub>.
+                          Eventually, F<sub>tp</sub> and F<sub>ti</sub> are sent to the decoder to ground 3D object affordance ϕ.
+                        </p>
+                  </div>
+              </div>
+
+            <div class="container is-max-desktop">
+                <div class="hero-body">
+                    <h2 class="title is-3">PIADv2 Dataset</h2>
+                    <img src="./static/images/dataset.png" height="150%" />
+                      <p>
+                        <b>PIADv2 Dataset.</b> (a) Extensive data examples from PIADv2, the <span style="color: rgb(255, 0, 0);">red</span> region in point clouds is 
+                        the affordance annotation. (b) Category distribution in PIADv2. (c) Confusion matrix between affordance and object categories, where the 
+                        horizontal axis represents object category and the vertical axis represents affordance category. (d) The ratio of images and point clouds in 
+                        each affordance category.
+                      </p>
+                </div>
+            </div>
+            
+            <div class="container is-max-desktop">
+                <div class="hero-body">
+                    <h2 class="title is-3">Experiment Results</h2>
+                    <img src="./static/images/compare_results.png" height="150%" />
+                      <p>
+                        <b>Visualization Results Compared with SOTA Methods.</b> The first row is the interaction image and the last row is the ground truth of 3D object affordance in point cloud. 
+                        The left-middle-right partitions correspond to the visual comparison results for different 3D object affordance in the Seen, Unseen Object, 
+                        and Unseen Affordance partitions, respectively. The depth of <span style="color: rgb(255, 0, 0);">red</span> represents the affordance probability.
+                      </p>
+                </div>
+            </div>
+
+    <h2 class="title is-3">Multiple Objects</h2>
+    <section class="hero is-light is-small">
+        <div class="hero-body">
+            <div class="container">
+                <div id="results-carousel" class="carousel results-carousel">
+                    <div class="item item-guitar-microphone">
+                        <video poster="" id="guitar-microphone" autoplay controls muted loop playsinline height="100%">
+                            <source src="./static/videos/guitar_microphone.mp4"
+                                    type="video/mp4">
+                        </video>
+                        <img src="./static/images/guitar_microphone.jpg" height="20%" />
+                    </div>
+                    <div class="item item-spoon-bowl">
+                      <img src="./static/images/spoon_bowl.jpg" height="20%" />
+                      <video poster="" id="spoon-bowl" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/spoon_bowl.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-hat-baseballbat">
+                      <video poster="" id="hat-baseballbat" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/hat_baseballbat.mp4"
+                                  type="video/mp4">
+                      </video>
+                      <img src="./static/images/hat_baseballbat.jpg" height="20%" />
+                    </div>
+                    <div class="item item-display-keyboard">
+                      <img src="./static/images/display_keyboard.jpg" height="20%" />
+                      <video poster="" id="display-keyboard" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/display_keyboard.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-suitcase">
+                        <video poster="" id="suitcase" autoplay controls muted loop playsinline height="100%">
+                            <source src="./static/videos/suitcase_pull_unseenaff.mp4"
+                                    type="video/mp4">
+                        </video>
+                        <img src="./static/images/suitcase_pull_unseenaff.jpg" height="20%" />
+                    </div>
+                </div>
+                <div style="text-align: center;"><b>Multiple Objects.</b> GREAT could anticipate the affordance of distinct object categories with the same interaction image. </div>
+            </div>
+        </div>
+    </section> 
+
+    <br><br>
+    <h2 class="title is-3">Multiple Affordances</h2>
+    <section class="hero is-light is-small">
+        <div class="hero-body">
+            <div class="container">
+                <div id="results-carousel" class="carousel results-carousel">
+                    <div class="item item-chair_multi">
+                        <img src="./static/images/chair_multi.png" height="20%" />
+                        <video poster="" id="bed" autoplay controls muted loop playsinline height="100%">
+                            <source src="./static/videos/chair_multi.mp4"
+                                    type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-earphone_multi">
+                      <img src="./static/images/earphone_multi.png" height="20%" />
+                      <video poster="" id="earphone_multi" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/earphone_multi.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-fork">
+                      <img src="./static/images/fork_multi.png" height="20%" />
+                      <video poster="" id="fork" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/fork_multi.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-mop">
+                      <img src="./static/images/mop_multi.png" height="20%" />
+                      <video poster="" id="scissors" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/mop_multi.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                    <div class="item item-table">
+                      <img src="./static/images/table_multi.png" height="20%" />
+                      <video poster="" id="scissors" autoplay controls muted loop playsinline height="100%">
+                          <source src="./static/videos/table_multi.mp4"
+                                  type="video/mp4">
+                      </video>
+                    </div>
+                </div>
+                <div style="text-align: center;"><b>Multiple Affordances.</b> GREAT could anticipate the affordance of the same object with distinct interaction images.</div>
+            </div>
+        </div>
+    </section>  
+
+            <!--
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Method Overview</h2>
+                </div>
+            </div>
+            <section class="hero teaser">
+                <div class="container is-max-desktop">
+                    <div class="hero-body">
+                        <img src="./static/teaser/overview.jpg"/>
+                    </div>
+                </div>
+            </section>
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <div class="content has-text-justified">
+                        <p>Surface features from an input 3D mesh are encoded through a face convolution-based encoder and decoded through a StyleGAN2-inspired decoder to generate textures directly on the surface of the mesh.</p>
+                        <p>To ensure that generated textures are realistic, the textured mesh is differentiably rendered from different view points and is critiqued by two discriminators.</p>
+                        <p>An image discriminator D<sub>I</sub> operates on full image views from the real or rendered views, while a patch-consistency discriminator D<sub>P</sub> encourages consistency between views by operating on patches coming from a single real view or patches from different views of rendered images.</p>
+                    </div>
+                </div>
+            </div>
+            -->
+    </section>
+
+    <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+          <h2 class="title">BibTeX</h2>
+          <pre><code>
+            @article{GREAT_Shao,
+              title={GREAT: Geometry-Intention Collaborative Inference for Open-Vocabulary 3D Object Affordance Grounding},
+              author={Shao Yawen and Zhai, Wei and Yang, Yuhang and Luo, Hongchen and Cao, Yang and Zha, Zheng-Jun},
+              journal={arXiv preprint arXiv:2411.},
+              year={2024}
+            }
+          </code></pre>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+          <div class="content has-text-centered">
+            <a class="icon-link"
+               href="https://arxiv.org/pdf/2312.08963.pdf">
+              <i class="fas fa-file-pdf"></i>
+            </a>
+            <a class="icon-link" href="https://github.com/yyvhang/lemon_3d" class="external-link" disabled>
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+          <div class="columns is-centered">
+            <div class="column is-8">
+              <div class="content">
+                <p style="text-align: center;">
+                  Thanks to <a href="https://keunhong.com/">Keunhong Park</a> for the <a
+                                      href="https://nerfies.github.io/">website template</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    <!-- Import maps polyfill -->
+    <!-- Remove this when import maps will be widely supported -->
+    <script
+    async
+    src="skin/custom/unpkg.com_es-module-shims@1.3.6_dist_es-module-shims.js"
+    ></script>
+    
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "./js/three.module.js"
+      }
+    }
+    </script>
+    
+    <script type="module">
+    import * as THREE from "three";
+    
+    import { PLYLoader } from "./js/PLYLoader.js";
+    import { OrbitControls } from "./js/OrbitControls.js";
+    let div_to_scene = {
+      hot1: {
+        color: null,
+      },
+      hot2: {
+        color: null,
+      },
+      hot3: {
+        color: null,
+      },
+      hot4: {
+        color: null,
+      },
+    
+      nat1: {
+        color: null,
+      },
+      nat2: {
+        color: null,
+      },
+      nat3: {
+        color: null,
+      },
+      nat4: {
+        color: null,
+      },
+    
+      damon1: {
+        color: null,
+      },
+      damon1_support: {
+        color: null,
+      },
+      damon2: {
+        color: null,
+      },
+      damon2_support: {
+        color: null,
+      },
+      damon3: {
+        color: null,
+      },
+      damon3_support: {
+        color: null,
+      },
+      damon4: {
+        color: null,
+      },
+      damon4_support: {
+        color: null,
+      }
+    };
+    let mouse_button_down = false;
+    let list_of_orbit_controls = [];
+    
+    function setup_camera(div_name) {
+      let container = document.getElementById(div_name);
+      let width = container.parentElement.clientWidth;
+      let height = container.parentElement.clientHeight;
+      console.log(width, height);
+      let camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 50);
+      let camera_init_position = new THREE.Vector3(0, 0, 2.2);
+      camera_init_position = camera_init_position.multiplyScalar(1.5);
+      camera.position.set(
+        camera_init_position.x,
+        camera_init_position.y,
+        camera_init_position.z
+      );
+      return camera;
+    }
+    
+    function setup_render_divs(div_name, mesh_path) {
+      let camera = setup_camera(div_name);
+      let orbit_control = create_render_div(camera, div_name, mesh_path);
+      list_of_orbit_controls.push(orbit_control);
+    }
+    
+    function create_render_div(camera, div_id, mesh_path) {
+      let container;
+      let renderer, controls;
+    
+      init();
+      animate();
+    
+      function init() {
+        container = document.getElementById(div_id);
+        let width = container.parentElement.clientWidth;
+        let height = container.parentElement.clientHeight;
+    
+        div_to_scene[div_id]["color"] = new THREE.Scene();
+        div_to_scene[div_id]["color"].background = new THREE.Color( 0xffffff );
+    
+        // PLY file
+    
+        const loader = new PLYLoader();
+        loader.load(mesh_path, function (geometry) {
+            geometry.computeVertexNormals();
+            let material_color = new THREE.MeshPhongMaterial( { 
+              color: 0xcce6ff, 
+              vertexColors: THREE.VertexColors,
+              specular: 0x222222,
+              shininess: 10,
+            });
+    
+            const mesh_color = new THREE.Mesh(geometry, material_color);
+            div_to_scene[div_id]["color"].add(mesh_color);
+          },
+          (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    
+        // lights
+    
+        add_lights(div_to_scene[div_id]["color"]);
+    
+        // renderer
+    
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(width, height);
+        renderer.outputEncoding = THREE.sRGBEncoding;
+    
+        container.appendChild(renderer.domElement);
+    
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = false;
+        controls.autoRotate = true;
+    
+        // resize
+    
+        window.addEventListener("resize", onWindowResize);
+        controls.addEventListener("start", function () {
+          controls.autoRotate = false;
+        });
+      }
+      function onWindowResize() {
+        let width = container.clientWidth;
+        let height = container.clientHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+      }
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        render();
+      }
+    
+      function render() {
+        renderer.render( div_to_scene[div_id]["color"], camera );
+        controls.update();
+      }
+    
+      return controls;
+    }
+    
+    function add_lights(scene) {
+      scene.add(new THREE.HemisphereLight(0x443333, 0x111122, 0.05));
+      const spotLight = new THREE.SpotLight(0xffffff, 0.5);
+      spotLight.position.set(0.0, 0.5, 1);
+      const spotLight2 = new THREE.SpotLight(0xffffff, 0.25);
+      spotLight2.position.set(-2, 0.3, -0.2);
+      const spotLight3 = new THREE.SpotLight(0xffffff, 0.25);
+      spotLight3.position.set(2, -0.3, 0.2);
+      const spotLight4 = new THREE.SpotLight(0xffffff, 0.25);
+      spotLight4.position.set(0.0, 1, -2);
+      const spotLight5 = new THREE.SpotLight(0xffffff, 0.05);
+      spotLight5.position.set(0, -2.5, -1);
+      spotLight.position.multiplyScalar(10);
+      scene.add(spotLight);
+      scene.add(spotLight2);
+      scene.add(spotLight3);
+      scene.add(spotLight4);
+      scene.add(spotLight5);
+    }
+    
+    document.addEventListener("keydown", logKey);
+    
+    function logKey(evt) {
+      if (evt.keyCode === 82 && !mouse_button_down) {
+        reset_orbit_controls();
+      }
+    }
+    
+    function reset_orbit_controls() {
+      list_of_orbit_controls.forEach((oc) => {
+        oc.reset();
+        oc.autoRotate = false;
+      });
+    }
+    
+    document.body.onmousedown = function (evt) {
+      if (evt.button === 0) mouse_button_down = true;
+    };
+    document.body.onmouseup = function (evt) {
+      if (evt.button === 0) mouse_button_down = false;
+    };
+    
+    window.onload = function () {
+      let slider = document.getElementsByClassName("slider")[0];
+      slider.removeAttribute("tabIndex");
+      setup_render_divs(
+        "hot1",
+        "./static/plys/Carry_Backpack_01.ply"
+      );
+      setup_render_divs(
+        "hot2",
+        "./static/plys/bag_aff.ply"
+      );
+      setup_render_divs(
+        "hot3",
+        "./models/hot/deco_vcoco_000000537864.ply"
+      );
+      setup_render_divs(
+        "hot4",
+        "./models/hot/deco_vcoco_000000576589.ply"
+      );
+    
+      setup_render_divs(
+        "nat1",
+        "./models/internet_yoga/pexels-photo-207569.ply"
+      );
+      setup_render_divs(
+        "nat2",
+        "./models/internet_yoga/pexels-photo-3622517.ply"
+      );
+      setup_render_divs(
+        "nat3",
+        "./models/internet_yoga/pexels-photo-15732209.ply"
+      );
+      setup_render_divs(
+        "nat4",
+        "./models/internet_yoga/213.ply"
+      );
+    
+      setup_render_divs(
+        "damon1",
+        "./models/damon/hake_train2015_HICO_train2015_00000082.ply"
+      );
+      setup_render_divs(
+        "damon1_support",
+        "./models/damon/hake_train2015_HICO_train2015_00000082_support.ply"
+      );
+      setup_render_divs(
+        "damon2",
+        "./models/damon/vcoco_000000350231.ply"
+      );
+      setup_render_divs(
+        "damon2_support",
+        "./models/damon/vcoco_000000350231_support.ply"
+      );
+      setup_render_divs(
+        "damon3",
+        "./models/damon/vcoco_000000420649.ply"
+      );
+      setup_render_divs(
+        "damon3_support",
+        "./models/damon/vcoco_000000420649_support.ply"
+      );
+      setup_render_divs(
+        "damon4",
+        "./models/damon/vcoco_000000577928.ply"
+      );
+      setup_render_divs(
+        "damon4_support",
+        "./models/damon/vcoco_000000577928_support.ply"
+      );
+    };
+    </script>
+</body>
+
+</html>
